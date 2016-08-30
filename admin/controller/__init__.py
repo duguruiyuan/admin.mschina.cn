@@ -5,5 +5,6 @@ ad = Blueprint('ad', __name__)
 
 from . import login
 from . import index
+from . import user_manage
 from . import test
 
