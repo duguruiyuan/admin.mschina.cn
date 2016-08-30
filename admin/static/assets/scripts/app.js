@@ -849,7 +849,7 @@ var App = function () {
             handleSidebarToggler(); // handles sidebar hide/show            
             handleFixInputPlaceholderForIE(); // fixes/enables html5 placeholder attribute for IE9, IE8
             handleGoTop(); //handles scroll to top functionality in the footer
-            handleTheme(); // handles style customer tool
+            //handleTheme(); // handles style customer tool
 
             //ui component handlers
             handleFancybox() // handle fancy box
