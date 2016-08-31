@@ -1,13 +1,72 @@
 {% extends "base.html" %}
 {% block cssblock %}
-   <!-- END GLOBAL MANDATORY STYLES -->
-   <!-- BEGIN PAGE LEVEL STYLES -->
    <link rel="stylesheet" type="text/css" href="/static/assets/plugins/select2/select2_metro.css" />
    <link rel="stylesheet" href="/static/assets/plugins/data-tables/DT_bootstrap.css" />
-   <!-- END PAGE LEVEL STYLES -->
+    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"/>
+   <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+   <style>
+    .pagination > ul > li {
+			  display: inline;
+			}
+			.pagination > ul > li > a,
+			.pagination > ul > li > span {
+			  position: relative;
+			  float: left;
+			  padding: 6px 12px;
+			  margin-left: -1px;
+			  line-height: 1.42857143;
+			  color: #337ab7;
+			  text-decoration: none;
+			  background-color: #fff;
+			  border: 1px solid #ddd;
+			}
+			.pagination > ul > li:first-child > a,
+			.pagination > ul > li:first-child > span {
+			  margin-left: 0;
+			  border-top-left-radius: 4px;
+			  border-bottom-left-radius: 4px;
+			}
+			.pagination > ul > li:last-child > a,
+			.pagination > ul > li:last-child > span {
+			  border-top-right-radius: 4px;
+			  border-bottom-right-radius: 4px;
+			}
+			.pagination > ul > li > a:hover,
+			.pagination > ul > li > span:hover,
+			.pagination > ul > li > a:focus,
+			.pagination > ul > li > span:focus {
+			  z-index: 3;
+			  color: #23527c;
+			  background-color: #eee;
+			  border-color: #ddd;
+			}
+			.pagination > ul > .active > a,
+			.pagination > ul > .active > span,
+			.pagination > ul > .active > a:hover,
+			.pagination > ul > .active > span:hover,
+			.pagination > ul > .active > a:focus,
+			.pagination > ul > .active > span:focus {
+			  z-index: 2;
+			  color: #fff;
+			  cursor: default;
+			  background-color: #337ab7;
+			  border-color: #337ab7;
+			}
+			.pagination > ul > .disabled > span,
+			.pagination > ul > .disabled > span:hover,
+			.pagination > ul > .disabled > span:focus,
+			.pagination > ul > .disabled > a,
+			.pagination > ul > .disabled > a:hover,
+			.pagination > ul > .disabled > a:focus {
+			  color: #777;
+			  cursor: not-allowed;
+			  background-color: #fff;
+			  border-color: #ddd;
+			}
+   </style>
 {% endblock %}
 {% block content %}
-    <!-- BEGIN PAGE HEADER-->
+
     <div class="row">
             <div class="col-md-12">
                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
@@ -24,21 +83,13 @@
                </ul>
                <!-- END PAGE TITLE & BREADCRUMB-->
             </div>
-         </div>
-    <!-- END PAGE HEADER-->
-    <!-- BEGIN PAGE CONTENT-->
+    </div>
+
     <div class="row">
             <div class="col-md-12">
-               <!-- BEGIN EXAMPLE TABLE PORTLET-->
                <div class="portlet box blue">
                   <div class="portlet-title">
                      <div class="caption"><i class="icon-edit"></i>用户列表</div>
-                     <div class="tools">
-                        <a href="javascript:;" class="collapse"></a>
-                        <a href="#portlet-config" data-toggle="modal" class="config"></a>
-                        <a href="javascript:;" class="reload"></a>
-                        <a href="javascript:;" class="remove"></a>
-                     </div>
                   </div>
                   <div class="portlet-body">
                      <div class="table-toolbar">
@@ -49,35 +100,91 @@
                      <table class="table table-striped table-hover table-bordered" id="user_table">
                         <thead>
                            <tr>
-                              <th>Username</th>
-                              <th>Full Name</th>
-                              <th>Points</th>
-                              <th>Notes</th>
-                              <th>Edit</th>
-                              <th>Delete</th>
+                              <th>账号</th>
+                              <th>密码</th>
+                              <th>手机</th>
+                              <th>类型</th>
+                              <th>操作</th>
                            </tr>
                         </thead>
                         <tbody>
                         {% for item in entities %}
                             <tr >
                               <td>{{ item.user_account }}</td>
-                              <td>Nick Roberts</td>
-                              <td>62</td>
-                              <td class="center">new user</td>
-                              <td><a class="edit" href="javascript:;">Edit</a></td>
-                              <td><a class="delete" href="javascript:;">Delete</a></td>
+                              <td>{{ item.user_password }}</td>
+                              <td>{{ item.user_mobile }}</td>
+                              {% if item.user_type==1 %}
+                                 <td class="center">房东</td>
+                              {% elif item.user_type==0 %}
+                                  <td class="center">游客</td>
+                              {% endif %}
+                              <td>
+                                  <a class="edit" onclick="showUpdateModal({{ item.user_id }});">Edit</a>
+                                  <a class="btn default" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});">DELETE</a>
+                              </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                      </table>
+                    <nav class="text-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
                   </div>
-                  
                </div>
-               <!-- END EXAMPLE TABLE PORTLET-->
             </div>
          </div>
-   <!-- END CORE PLUGINS -->
-
+        <div id="update-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+                       <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                         <h4 class="modal-title">修改用户</h4>
+                       </div>
+                       <div class="modal-body">
+                         <div class="form-group">
+                           <input class="form-control" type="text" data-tabindex="1" placeholder="密码" id="user_password">
+                         </div>
+                         <div class="form-group">
+                           <input class="form-control" type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
+                         </div>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                         <button type="button" class="btn btn-primary">Ok</button>
+                       </div>
+        </div>
+        <div id="delete-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                       <div class="modal-body">
+                         <p>您确定要删除该用户吗?</p>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                         <button type="button" data-dismiss="modal" class="btn blue" onclick="delUserById()">继续删除</button>
+                       </div>
+        </div>
+        <input type="hidden" id="hid-user-id" value="">
 {% endblock %}
 {% block jsblock %}
+    <script>
+    function showDelModal(id) {
+        $("#hid-user-id").val(id);
+        $('#delete-modal').modal('show');
+    }
+    function delUserById() {
+        var user_id = $("#hid-user-id").val();
+        //ajax api
+        var current_url = window.location.href;
+        //alert(current_url);
+    }
+    function showUpdateModal(id) {
+        $("#hid-user-id").val(id);
+        $('#update-modal').modal('show');
+    }
+    function updateUserById() {
+
+    }
+    $(function () {
+        
+    });
+    </script>
 {% endblock %}
