@@ -114,13 +114,13 @@
                               <td>{{ item.user_password }}</td>
                               <td>{{ item.user_mobile }}</td>
                               {% if item.user_type==1 %}
-                                 <td class="center">房东</td>
+                                 <td class="center"><span class="label label-sm label-danger">房东</span></td>
                               {% elif item.user_type==0 %}
-                                  <td class="center">游客</td>
+                                  <td class="center"><span class="label label-sm label-info">游客</span></td>
                               {% endif %}
                               <td>
-                                  <a class="edit" onclick="showUpdateModal({{ item }});">Edit</a>
-                                  <a class="btn default" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});">DELETE</a>
+                                  <a class="btn default btn-xs purple" onclick="showUpdateModal({{ item }});"><i class="icon-edit"></i> Edit</a>
+                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});"><i class="icon-trash"></i> Delete</a>
                               </td>
                             </tr>
                         {% endfor %}
@@ -141,17 +141,17 @@
                          <h4 class="modal-title">修改用户</h4>
                        </div>
                        <div class="modal-body">
-                           <div class="form-group">
-                           <input class="form-control" type="text" data-tabindex="1" placeholder="账号" id="user_account">
+                         <div class="form-group">
+                             账号:<input class="form-control" type="text" data-tabindex="1" placeholder="账号" id="user_account">
                          </div>
                          <div class="form-group">
-                           <input class="form-control" type="text" data-tabindex="1" placeholder="密码" id="user_password">
+                           密码:<input type="text" data-tabindex="1" placeholder="密码" id="user_password">
                          </div>
                          <div class="form-group">
-                           <input class="form-control" type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
+                           手机号:<input type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
                          </div>
                          <div class="form-group">
-                           <input class="form-control" type="text" data-tabindex="2" placeholder="用户类型" id="user_type">
+                           用户类型:<input type="text" data-tabindex="2" placeholder="用户类型" id="user_type">
                          </div>
                        </div>
                        <div class="modal-footer">

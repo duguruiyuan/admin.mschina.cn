@@ -56,25 +56,25 @@ Internet Explorer 10 doesn't differentiate device width from viewport width, and
 properly apply the media queries in Bootstrap's CSS. To address this, 
 you can optionally include the following CSS and JavaScript to work around this problem until Microsoft issues a fix.
 */
-@-webkit-viewport { 
-  width: device-width; 
-}
+/*@-webkit-viewport { */
+  /*width: device-width; */
+/*}*/
 
-@-moz-viewport { 
-  width: device-width; 
-}
+/*@-moz-viewport { */
+  /*width: device-width; */
+/*}*/
 
-@-ms-viewport { 
-  width: device-width; 
-}
+/*@-ms-viewport { */
+  /*width: device-width; */
+/*}*/
 
-@-o-viewport { 
-  width: device-width; 
-}
+/*@-o-viewport { */
+  /*width: device-width; */
+/*}*/
 
-@viewport { 
-  width: device-width; 
-}
+/*@viewport { */
+  /*width: device-width; */
+/*}*/
 
 /* Internet Explorer 10 doesn't differentiate device width from viewport width, 
 and thus doesn't properly apply the media queries in Bootstrap's CSS. To address this, following CSS code applied */
@@ -1064,7 +1064,7 @@ Page breadcrumb
 } 
 
 .page-content .page-breadcrumb.breadcrumb .dashboard-date-range > .icon-calendar {
-  text-transform: normal;
+  /*text-transform: normal;*/
   color: #fff;
   margin-top: 0px;
   font-size: 14px;
@@ -2679,7 +2679,7 @@ Custom portlet tabs
   margin-right: 0px;
   border-left: 0;    
   border-right: 0;
-  background-color: none !important;
+  /*background-color: none !important;*/
   border-top-color:transparent !important;
 }
 
@@ -2691,7 +2691,7 @@ Custom portlet tabs
   margin-right: 0;
   border-left: 0;    
   border-right: 0;
-  background-color: none !important;
+  /*background-color: none !important;*/
   border-top-color:transparent;
   background-color: #fff;
 }  
@@ -3542,7 +3542,7 @@ Social Icons(new in v1.2.2)
   background-repeat:no-repeat;
   transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
+  /*-ms-transition: all 0.3s ease-in-out;*/
   -moz-transition: all 0.3s ease-in-out;
   -webkit-transition: all 0.3s ease-in-out;
 }
@@ -3601,7 +3601,7 @@ Inline Social Icons
   background-repeat:no-repeat;
   transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
+  /*-ms-transition: all 0.3s ease-in-out;*/
   -moz-transition: all 0.3s ease-in-out;
   -webkit-transition: all 0.3s ease-in-out;
 }
