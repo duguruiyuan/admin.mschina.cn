@@ -67,6 +67,21 @@ def do_update_userById():
     if response_data["code"] == 1:
         return jsonify({"code": 1, "message": "success"})
 
+@ad.route("/user/do_reuse_ById", methods=['POST'])
+def do_reuse_ById():
+    user_id = request.json.get("user_id")
+    if not user_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    response = requests.put(Conf.API_ADDRESS + "/api/v1.0/reUse_ById/" + user_id,headers={"content-type": "application/json"})
+
+    response_data = json.loads(response.content)
+    # code = 0编辑失败
+    if response_data["code"] == 0:
+        return jsonify(response_data)
+    # code = 1 编辑成功
+    if response_data["code"] == 1:
+        return jsonify({"code": 1, "message": "success"})
+
 # 添加新用户
 #user_password_hash = hashlib.md5(user_password.encode('utf-8')).hexdigest()
 @ad.route("/user/insert_user",methods = ["POST"])

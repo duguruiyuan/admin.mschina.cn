@@ -43,7 +43,7 @@
                               <th>账号</th>
                               <th>密码</th>
                               <th>手机</th>
-                              <th>会员类型</th>
+                              <th>类型</th>
                               <th>状态</th>
                               <th>申请时间</th>
                               <th>更新时间</th>
@@ -61,12 +61,20 @@
                               {% elif item.user_type==0 %}
                                   <td class="center"><span class="label label-sm label-info">游客</span></td>
                               {% endif %}
-                              <td>{{ item.user_status }}</td>
-                              <td>{{ item.user_createtime }}</td>
+                              {% if item.user_status==1 %}
+                                 <td class="center"><span class="label label-sm label-info">正常</span></td>
+                              {% elif item.user_status==0 %}
+                                 <td class="center"><span class="label label-sm label-danger">已禁用</span></td>
+                              {% endif %}
+                              <td>{{ item.user_createtime}}</td>
                               <td>{{ item.user_modifytime }}</td>
                               <td>
-                                  <a class="btn default btn-xs purple" onclick="showUpdateModal({{ item }});"><i class="icon-edit"></i> Edit</a>
-                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});"><i class="icon-trash"></i> Delete</a>
+                                  <a class="btn default btn-xs purple" onclick="showUpdateModal({{ item }});"><i class="icon-edit"></i>编辑</a>
+                              {% if item.user_status==1 %}
+                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});"><i class="icon-trash"></i>禁用</a>
+                              {% elif item.user_status==0 %}
+                                  <a class="btn default btn-xs blue" data-target="#reUse-modal" onclick="showUseModal({{ item.user_id }});"><i class="icon-share"></i>起用</a>
+                              {% endif %}
                               </td>
                             </tr>
                         {% endfor %}
@@ -134,7 +142,16 @@
                        </div>
                        <div class="modal-footer">
                          <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
-                         <button type="button" data-dismiss="modal" class="btn blue" onclick="delUserById()">继续删除</button>
+                         <button type="button" data-dismiss="modal" class="btn blue" onclick="delUserById()">提交</button>
+                       </div>
+        </div>
+        <div id="reUse-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                       <div class="modal-body">
+                         <p>您确定要重新启用该用户吗?</p>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                         <button type="button" data-dismiss="modal" class="btn blue" onclick="doReUseById()">启用</button>
                        </div>
         </div>
         <input type="hidden" id="hid-user-id" value="">
@@ -144,6 +161,10 @@
     function showDelModal(id) {
         $("#hid-user-id").val(id);
         $('#delete-modal').modal('show');
+    }
+    function showUseModal(id) {
+        $("#hid-user-id").val(id);
+        $('#reUse-modal').modal('show');
     }
     function delUserById() {
         var user_id = $("#hid-user-id").val();
@@ -165,6 +186,28 @@
                 }
             });
     }
+
+    function doReUseById() {
+        var user_id = $("#hid-user-id").val();
+        $.ajax({
+                url: "/user/do_reuse_ById",
+                type: 'POST',
+                data: JSON.stringify({
+                    "user_id":user_id
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert("启用失败");
+                        return false;
+                    }else if(data.code == 1){
+                        alert("启用成功");
+                        location.reload();
+                    }
+                }
+            });
+    }
+
     function showUpdateModal(itemObj) {
         $("#hid-user-id").val(itemObj.user_id);
         $("#update-modal #user_account").val(itemObj.user_account);
