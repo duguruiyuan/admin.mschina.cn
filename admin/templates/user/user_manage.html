@@ -6,7 +6,6 @@
    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 {% block content %}
-
     <div class="row">
             <div class="col-md-12">
                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
@@ -24,7 +23,6 @@
                <!-- END PAGE TITLE & BREADCRUMB-->
             </div>
     </div>
-
     <div class="row">
             <div class="col-md-12">
                <div class="portlet box blue">
@@ -57,7 +55,9 @@
                               <td>{{ item.user_password }}</td>
                               <td>{{ item.user_mobile }}</td>
                               {% if item.user_type==1 %}
-                                 <td class="center"><span class="label label-sm label-danger">房东</span></td>
+                                 <td class="center">
+                                 <a class="btn default btn-xs green-stripe" onclick="" title="adsfsd">房东</a>
+                                 </td>
                               {% elif item.user_type==0 %}
                                   <td class="center"><span class="label label-sm label-info">游客</span></td>
                               {% endif %}
@@ -89,7 +89,8 @@
                </div>
             </div>
          </div>
-        <div id="update-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+    <!--modal begin-->
+    <div id="update-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
                        <div class="modal-header">
                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                          <h4 class="modal-title">修改用户</h4>
@@ -113,7 +114,7 @@
                          <button type="button" class="btn btn-primary" onclick="updateUserById()">提交修改</button>
                        </div>
         </div>
-        <div id="insert-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+    <div id="insert-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
                        <div class="modal-header">
                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                          <h4 class="modal-title">添加新用户</h4>
@@ -136,16 +137,16 @@
                          <button type="button" class="btn btn-primary" onclick="insertUser()">添加</button>
                        </div>
         </div>
-        <div id="delete-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div id="delete-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
                        <div class="modal-body">
-                         <p>您确定要删除该用户吗?</p>
+                         <p>您确定要禁用该用户吗?</p>
                        </div>
                        <div class="modal-footer">
                          <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
                          <button type="button" data-dismiss="modal" class="btn blue" onclick="delUserById()">提交</button>
                        </div>
         </div>
-        <div id="reUse-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div id="reUse-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
                        <div class="modal-body">
                          <p>您确定要重新启用该用户吗?</p>
                        </div>
@@ -154,7 +155,8 @@
                          <button type="button" data-dismiss="modal" class="btn blue" onclick="doReUseById()">启用</button>
                        </div>
         </div>
-        <input type="hidden" id="hid-user-id" value="">
+    <!--modal end-->
+    <input type="hidden" id="hid-user-id" value="">
 {% endblock %}
 {% block jsblock %}
     <script>
@@ -186,7 +188,6 @@
                 }
             });
     }
-
     function doReUseById() {
         var user_id = $("#hid-user-id").val();
         $.ajax({
@@ -207,7 +208,6 @@
                 }
             });
     }
-
     function showUpdateModal(itemObj) {
         $("#hid-user-id").val(itemObj.user_id);
         $("#update-modal #user_account").val(itemObj.user_account);
@@ -241,7 +241,6 @@
                 }
             });
     }
-    
     function insertUser() {
         var user_account = $("#insert-modal #user_account").val();
         var user_password = $("#insert-modal #user_password").val();
@@ -271,11 +270,9 @@
                 }
             });
     }
-
     $(function () {
         // 添加新用户按钮事件
         $("#btn_add_new_user").click(function () {
-
             $('#insert-modal').modal('show');
         });
     });
