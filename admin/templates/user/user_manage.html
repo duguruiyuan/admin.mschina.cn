@@ -271,6 +271,9 @@
             });
     }
     $(function () {
+        // 初始化导航及左边栏
+        App.init(); // initlayout and core plugins
+        Index.init();
         // 添加新用户按钮事件
         $("#btn_add_new_user").click(function () {
             $('#insert-modal').modal('show');
