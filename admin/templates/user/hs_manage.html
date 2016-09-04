@@ -1,4 +1,330 @@
 {% extends "base.html" %}
+{% block cssblock %}
+   <link rel="stylesheet" type="text/css" href="/static/assets/plugins/select2/select2_metro.css" />
+   <link rel="stylesheet" href="/static/assets/plugins/data-tables/DT_bootstrap.css" />
+    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"/>
+   <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
 {% block content %}
-<p>房东管理</p>
+    <div class="row">
+            <div class="col-md-12">
+               <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+               <ul class="page-breadcrumb breadcrumb">
+                  <li>
+                     <i class="icon-home"></i>
+                     <a href="/index">Home</a>
+                     <i class="icon-angle-right"></i>
+                  </li>
+                  <li><a href="#">房东管理</a></li>
+               </ul>
+               <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+               <div class="portlet box blue">
+                  <div class="portlet-title">
+                     <div class="caption"><i class="icon-edit"></i>房东列表</div>
+                  </div>
+                  <div class="portlet-body">
+                     <div class="table-toolbar">
+                        <div class="btn-group">
+                           <button id="btn_add_new_user" class="btn green">添加 <i class="icon-plus"></i></button>
+                        </div>
+                     </div>
+                     <table class="table table-striped table-hover table-bordered" id="user_table">
+                        <thead>
+                           <tr>
+                              <th>账号</th>
+                              <th>手机</th>
+                              <th>类型</th>
+                              <th>状态</th>
+                              <th>申请时间</th>
+                              <th>更新时间</th>
+                              <th>操作</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in entities %}
+                            <tr >
+                              <td><a class="btn default btn-xs purple" onclick="showDetailModal({{ item.user_id }});">{{ item.user_account }}</a></td>
+                              <td>{{ item.user_mobile }}</td>
+                              <td class="center"><span class="label label-sm label-info">房东</span></td>
+                              {% if item.user_status==1 %}
+                                 <td class="center"><span class="label label-sm label-info">正常</span></td>
+                              {% elif item.user_status==0 %}
+                                 <td class="center"><span class="label label-sm label-danger">已禁用</span></td>
+                              {% endif %}
+                              <td>{{ item.user_createtime}}</td>
+                              <td>{{ item.user_modifytime }}</td>
+                              <td>
+                                  <a class="btn default btn-xs purple" onclick="showUpdateBaseModal({{ item }});"><i class="icon-edit"></i>修改基本资料</a>
+                                  <a class="btn default btn-xs yellow" onclick="showUpdateOwnerModal({{ item }});"><i class="icon-edit"></i>修改详细</a>
+                              {% if item.user_status==1 %}
+                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});"><i class="icon-trash"></i>禁用</a>
+                              {% elif item.user_status==0 %}
+                                  <a class="btn default btn-xs blue" data-target="#reUse-modal" onclick="showUseModal({{ item.user_id }});"><i class="icon-share"></i>起用</a>
+                              {% endif %}
+                              </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                     </table>
+                    <nav class="text-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+    <!--modal begin-->
+    <div id="update-base-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+                       <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                         <h4 class="modal-title">修改房东基本资料</h4>
+                       </div>
+                       <div class="modal-body">
+                         <div class="form-group">
+                             账号:<input class="text-control" type="text" data-tabindex="1" placeholder="账号" id="user_account">
+                         </div>
+                         <div class="form-group">
+                           密码:<input class="text-control" type="text" data-tabindex="1" placeholder="密码" id="user_password">
+                         </div>
+                         <div class="form-group">
+                           手机号:<input  class="text-control" type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
+                         </div>
+                         <div class="form-group">
+                           用户类型:<input class="text-control" type="text" data-tabindex="2" placeholder="用户类型" id="user_type">
+                         </div>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                         <button type="button" class="btn btn-primary" onclick="updateBaseById()">提交修改</button>
+                       </div>
+        </div>
+    <div id="update-hs-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+                       <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                         <h4 class="modal-title">修改房东详细资料</h4>
+                       </div>
+                       <div class="modal-body">
+                         <div class="form-group">
+                             账号:<input class="text-control" type="text" data-tabindex="1" placeholder="账号" id="user_account">
+                         </div>
+                         <div class="form-group">
+                           密码:<input class="text-control" type="text" data-tabindex="1" placeholder="密码" id="user_password">
+                         </div>
+                         <div class="form-group">
+                           手机号:<input  class="text-control" type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
+                         </div>
+                         <div class="form-group">
+                           用户类型:<input class="text-control" type="text" data-tabindex="2" placeholder="用户类型" id="user_type">
+                         </div>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                         <button type="button" class="btn btn-primary" onclick="updateUserById()">提交修改</button>
+                       </div>
+        </div>
+    <div id="insert-base-modal" class="modal fade" tabindex="-1" data-focus-on="input:first">
+                       <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                         <h4 class="modal-title">添加新用户</h4>
+                       </div>
+                       <div class="modal-body">
+                         <div class="form-group"><input class="text-control" type="text" data-tabindex="1" placeholder="账号" id="user_account">
+                         </div>
+                         <div class="form-group">
+                           <input class="text-control" type="text" data-tabindex="1" placeholder="密码" id="user_password">
+                         </div>
+                         <div class="form-group">
+                           <input  class="text-control" type="text" data-tabindex="2" placeholder="手机号" id="user_mobile">
+                         </div>
+                         <div class="form-group">
+                           <input class="text-control" type="text" data-tabindex="2" placeholder="用户类型" id="user_type">
+                         </div>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                         <button type="button" class="btn btn-primary" onclick="insertUser()">添加</button>
+                       </div>
+        </div>
+    <div id="delete-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                       <div class="modal-body">
+                         <p>您确定要禁用该用户吗?</p>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                         <button type="button" data-dismiss="modal" class="btn blue" onclick="delUserById()">提交</button>
+                       </div>
+        </div>
+    <div id="reUse-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                       <div class="modal-body">
+                         <p>您确定要重新启用该用户吗?</p>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                         <button type="button" data-dismiss="modal" class="btn blue" onclick="doReUseById()">启用</button>
+                       </div>
+        </div>
+    <!--modal end-->
+    <div id="detailModal" class="modal fade in" tabindex="-1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">房东详细</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+    </div>
+    <input type="hidden" id="hid-user-id" value="">
+{% endblock %}
+{% block jsblock %}
+    <script>
+    function showDetailModal(id) {
+        $.ajax({
+                url: "/hs/get_detail_by_userId/"+id,
+                type: 'GET',
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert(data.message);
+                        return false;
+                    }else if(data.code == 1){
+                        var result = eval(data.message)[0];
+
+                        var str="<img src="+result.ho_nacard+" windth=50 height=50><p>真实姓名:"+result.ho_name+"</p><p>电话号码:"+result.ho_tel+"</p><p>电子邮件:"+result.ho_email+"</p><p>注册时间:"+result.ho_createtime+"</p> <p>修改时间:"+result.ho_modifytime+"</p>";
+
+                        $("#detailModal .modal-body").html(str);
+                        $("#detailModal").modal('show');
+                    }
+                }
+            });
+    }
+    function showDelModal(id) {
+        $("#hid-user-id").val(id);
+        $('#delete-modal').modal('show');
+    }
+    function showUseModal(id) {
+        $("#hid-user-id").val(id);
+        $('#reUse-modal').modal('show');
+    }
+    function delUserById() {
+        var user_id = $("#hid-user-id").val();
+        $.ajax({
+                url: "/user/delete_user_by_id",
+                type: 'POST',
+                data: JSON.stringify({
+                    "user_id":user_id
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert(data.message);
+                        return false;
+                    }else if(data.code == 1){
+                        alert(data.message);
+                        location.reload();
+                    }
+                }
+            });
+    }
+    function doReUseById() {
+        var user_id = $("#hid-user-id").val();
+        $.ajax({
+                url: "/user/do_reuse_ById",
+                type: 'POST',
+                data: JSON.stringify({
+                    "user_id":user_id
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert("启用失败");
+                        return false;
+                    }else if(data.code == 1){
+                        alert("启用成功");
+                        location.reload();
+                    }
+                }
+            });
+    }
+    function showUpdateBaseModal(itemObj) {
+        $("#hid-user-id").val(itemObj.user_id);
+        $("#update-base-modal #user_account").val(itemObj.user_account);
+        $("#update-base-modal #user_password").val(itemObj.user_password);
+        $("#update-base-modal #user_mobile").val(itemObj.user_mobile);
+        $("#update-base-modal #user_type").val(itemObj.user_type);
+        $('#update-base-modal').modal('show');
+    }
+    function updateBaseById() {
+        $.ajax({
+                url: "/user/do_update_userById",
+                type: 'POST',
+                data: JSON.stringify({
+                    "user_id":$("#hid-user-id").val(),
+                    "user_account": $("#user_account").val(),
+                    "user_password": $("#user_password").val(),
+                    "user_mobile": $("#user_mobile").val(),
+                    "user_type":$("#user_type").val()
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert("修改失败");
+                        return false;
+                    }else if(data.code == 1){
+                        $('#update-modal').modal('hide');
+                        //location.href=window.location.href;
+                        location.reload();
+                    }
+                }
+            });
+    }
+    function insertUser() {
+        var user_account = $("#insert-modal #user_account").val();
+        var user_password = $("#insert-modal #user_password").val();
+        var user_mobile = $("#insert-modal #user_mobile").val();
+        var user_type = $("#insert-modal #user_type").val();
+        var user_headimg = "/static/img/head_portrait.png";
+
+        $.ajax({
+                url: "/user/insert_user",
+                type: 'POST',
+                data: JSON.stringify({
+                    "user_account": user_account,
+                    "user_password": user_password,
+                    "user_mobile":user_mobile,
+                    "user_type":user_type,
+                    "user_headimg":user_headimg
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert("添加失败");
+                        return false;
+                    }else if(data.code == 1){
+                        $('#insert-modal').modal('hide');
+                        location.reload();
+                    }
+                }
+            });
+    }
+    $(function () {
+        // 初始化导航及左边栏
+        App.init(); // initlayout and core plugins
+        Index.init();
+        // 添加新用户按钮事件
+        $("#btn_add_new_user").click(function () {
+            $('#insert-modal').modal('show');
+        });
+    });
+    </script>
 {% endblock %}

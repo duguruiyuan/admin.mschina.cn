@@ -7,10 +7,10 @@ from admin.config import Conf
 import hashlib
 
 '''
-用户管理模块:包括普通用户管理和房东的管理
+用户管理模块:包括普通会员管理和房东的管理
 '''
 
-
+# 普通会员管理
 @ad.route("/user_manage")
 def user_manage():
     page = request.args.get('page')
@@ -33,9 +33,6 @@ def user_manage():
         return render_template("user/user_manage.html")
     return render_template("user/user_manage.html")
 
-@ad.route("/hs_manage")
-def hs_manage():
-    return render_template("user/hs_manage.html")
 
 #更新用户资料
 @ad.route("/user/do_update_userById",methods=['POST'])
@@ -132,3 +129,40 @@ def delete_user_by_id():
     # code = 1 删除成功
     if response_data["code"] == 1:
         return jsonify({"code": 1, "message": "删除成功"})
+
+# 房东管理
+@ad.route("/hs_manage")
+def hs_manage():
+    page = request.args.get('page')
+    if page == None:
+        page = '1'
+
+    try:
+        response = requests.get(url=Conf.API_ADDRESS + "/api/v1.0/get_all_hs_owner/" + page)
+        response_data = json.loads(response.content)
+        if response_data['code'] == 1:
+            page = response_data['page']
+            pages = response_data['pages']
+            total = response_data['total']
+            entities = response_data['message']
+
+            pagination = Pagination(page=page, total=total, pages=pages)
+            return render_template("user/hs_manage.html", pagination=pagination, entities=entities)
+
+    except Exception as e:
+        return render_template("user/hs_manage.html")
+    return render_template("user/hs_manage.html")
+
+@ad.route("/hs/get_detail_by_Id/<int:ho_id>")
+def get_detail_by_Id(ho_id):
+    if not ho_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    try:
+        response = requests.get(url=Conf.API_ADDRESS + "/api/v1.0/get_hs_by_Id/" + str(ho_id))
+        response_data = json.loads(response.content)
+        if response_data['code'] == 1:
+            entity = response_data['message']
+            return jsonify({"code":1,"message":entity})
+
+    except Exception as e:
+        return jsonify({"code": 0, "message": "查询失败"})

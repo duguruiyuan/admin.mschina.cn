@@ -9,9 +9,6 @@
     <div class="row">
             <div class="col-md-12">
                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
-               <h3 class="page-title">
-                  注册用户管理 <small>statistics and more</small>
-               </h3>
                <ul class="page-breadcrumb breadcrumb">
                   <li>
                      <i class="icon-home"></i>
@@ -54,13 +51,7 @@
                               <td>{{ item.user_account }}</td>
                               <td>{{ item.user_password }}</td>
                               <td>{{ item.user_mobile }}</td>
-                              {% if item.user_type==1 %}
-                                 <td class="center">
-                                 <a class="btn default btn-xs green-stripe" onclick="" title="adsfsd">房东</a>
-                                 </td>
-                              {% elif item.user_type==0 %}
-                                  <td class="center"><span class="label label-sm label-info">游客</span></td>
-                              {% endif %}
+                              <td class="center"><span class="label label-sm label-info">游客</span></td>
                               {% if item.user_status==1 %}
                                  <td class="center"><span class="label label-sm label-info">正常</span></td>
                               {% elif item.user_status==0 %}
