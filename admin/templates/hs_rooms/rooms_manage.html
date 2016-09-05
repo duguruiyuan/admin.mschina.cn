@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block cssblock %}
+   <link rel="stylesheet" type="text/css" href="/static/assets/plugins/select2/select2_metro.css" />
+   <link rel="stylesheet" href="/static/assets/plugins/data-tables/DT_bootstrap.css" />
+    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"/>
+   <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block content %}
+    <div class="row">
+            <div class="col-md-12">
+               <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+               <ul class="page-breadcrumb breadcrumb">
+                  <li>
+                     <i class="icon-home"></i>
+                     <a href="/index">Home</a>
+                     <i class="icon-angle-right"></i>
+                  </li>
+                  <li><a href="#">管理</a></li>
+               </ul>
+               <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+               <div class="portlet box blue">
+                  <div class="portlet-title">
+                     <div class="caption"><i class="icon-edit"></i>客房列表</div>
+                  </div>
+                  <div class="portlet-body">
+                     <div class="table-toolbar">
+                        <div class="btn-group">
+                           <button id="btn_add_new_user" class="btn green">添加 <i class="icon-plus"></i></button>
+                        </div>
+                     </div>
+                     <table class="table table-striped table-hover table-bordered" id="user_table">
+                        <thead>
+                           <tr>
+                              <th>账号</th>
+
+                              <th>操作</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                     </table>
+                    <nav class="text-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+{% endblock %}
+{% block jsblock %}
+
+{% endblock %}

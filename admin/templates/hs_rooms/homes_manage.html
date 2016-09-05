@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block cssblock %}
+   <link rel="stylesheet" type="text/css" href="/static/assets/plugins/select2/select2_metro.css" />
+   <link rel="stylesheet" href="/static/assets/plugins/data-tables/DT_bootstrap.css" />
+    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"/>
+   <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block content %}
+    <div class="row">
+            <div class="col-md-12">
+               <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+               <ul class="page-breadcrumb breadcrumb">
+                  <li>
+                     <i class="icon-home"></i>
+                     <a href="/index">Home</a>
+                     <i class="icon-angle-right"></i>
+                  </li>
+                  <li><a href="#">管理</a></li>
+               </ul>
+               <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+               <div class="portlet box blue">
+                  <div class="portlet-title">
+                     <div class="caption"><i class="icon-edit"></i>房源列表</div>
+                  </div>
+                  <div class="portlet-body">
+                     <div class="table-toolbar">
+                        <div class="btn-group">
+                           <button id="btn_add_new_user" class="btn green">添加 <i class="icon-plus"></i></button>
+                        </div>
+                     </div>
+                     <table class="table table-striped table-hover table-bordered" id="user_table">
+                        <thead>
+                           <tr>
+                              <th>账号</th>
+
+                              <th>操作</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in entities %}
+                            <tr >
+                              <td><a class="btn default btn-xs purple" onclick="">{{ item.user_account }}</a></td>
+                              <td>{{ item.user_mobile }}</td>
+                              <td class="center"><span class="label label-sm label-info">房东</span></td>
+                              {% if item.user_status==1 %}
+                                 <td class="center"><span class="label label-sm label-info">正常</span></td>
+                              {% elif item.user_status==0 %}
+                                 <td class="center"><span class="label label-sm label-danger">已禁用</span></td>
+                              {% endif %}
+                              <td>{{ item.user_createtime}}</td>
+                              <td>{{ item.user_modifytime }}</td>
+                              <td>
+                                  <a class="btn default btn-xs purple" onclick="showUpdateBaseModal({{ item }});"><i class="icon-edit"></i>修改基本资料</a>
+                                  <a class="btn default btn-xs yellow" onclick="showUpdateOwnerModal({{ item }});"><i class="icon-edit"></i>修改详细</a>
+                              {% if item.user_status==1 %}
+                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.user_id }});"><i class="icon-trash"></i>禁用</a>
+                              {% elif item.user_status==0 %}
+                                  <a class="btn default btn-xs blue" data-target="#reUse-modal" onclick="showUseModal({{ item.user_id }});"><i class="icon-share"></i>起用</a>
+                              {% endif %}
+                              </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                     </table>
+                    <nav class="text-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+{% endblock %}
+{% block jsblock %}
+
+{% endblock %}

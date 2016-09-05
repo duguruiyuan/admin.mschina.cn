@@ -131,8 +131,8 @@ def delete_user_by_id():
         return jsonify({"code": 1, "message": "删除成功"})
 
 # 房东管理
-@ad.route("/hs_manage")
-def hs_manage():
+@ad.route("/fangdong_manage")
+def fangdong_manage():
     page = request.args.get('page')
     if page == None:
         page = '1'
@@ -147,11 +147,11 @@ def hs_manage():
             entities = response_data['message']
 
             pagination = Pagination(page=page, total=total, pages=pages)
-            return render_template("user/hs_manage.html", pagination=pagination, entities=entities)
+            return render_template("user/fangdong_manage.html", pagination=pagination, entities=entities)
 
     except Exception as e:
-        return render_template("user/hs_manage.html")
-    return render_template("user/hs_manage.html")
+        return render_template("user/fangdong_manage.html")
+    return render_template("user/fangdong_manage.html")
 
 @ad.route("/hs/get_detail_by_Id/<int:ho_id>")
 def get_detail_by_Id(ho_id):

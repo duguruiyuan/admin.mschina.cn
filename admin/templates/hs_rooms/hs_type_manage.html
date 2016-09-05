@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block cssblock %}
+   <link rel="stylesheet" type="text/css" href="/static/assets/plugins/select2/select2_metro.css" />
+   <link rel="stylesheet" href="/static/assets/plugins/data-tables/DT_bootstrap.css" />
+    <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"/>
+   <link href="/static/assets/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block content %}
+    <div class="row">
+            <div class="col-md-12">
+               <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+               <ul class="page-breadcrumb breadcrumb">
+                  <li>
+                     <i class="icon-home"></i>
+                     <a href="/index">Home</a>
+                     <i class="icon-angle-right"></i>
+                  </li>
+                  <li><a href="#">管理</a></li>
+               </ul>
+               <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+               <div class="portlet box blue">
+                  <div class="portlet-title">
+                     <div class="caption"><i class="icon-edit"></i>房源类型列表</div>
+                  </div>
+                  <div class="portlet-body">
+                     <div class="table-toolbar">
+                        <div class="btn-group">
+                           <button id="btn_add_new_user" class="btn green">添加 <i class="icon-plus"></i></button>
+                        </div>
+                     </div>
+                     <table class="table table-striped table-hover table-bordered" id="user_table">
+                        <thead>
+                           <tr>
+                              <th>ID</th>
+                              <th>类型名称</th>
+                              <th>升级点击量</th>
+                              <th>创建时间</th>
+                              <th>修改时间</th>
+                              <th>操作</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in entities %}
+                            <tr >
+                              <td><a class="btn default btn-xs purple" onclick="">{{ item.ty_id }}</a></td>
+                              <td>{{ item.ty_name }}</td>
+                              <td>{{ item.ty_valume }}</td>
+                              <td>{{ item.user_createtime}}</td>
+                              <td>{{ item.user_modifytime }}</td>
+                              <td>
+                                  <a class="btn default btn-xs purple" onclick="showUpdateModal({{ item }});"><i class="icon-edit"></i>修改</a>
+                                  <a class="btn default btn-xs black" data-target="#delete-modal" onclick="showDelModal({{ item.ty_id }});"><i class="icon-trash"></i>禁用</a>
+                              </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                     </table>
+                    <nav class="text-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+{% endblock %}
+{% block jsblock %}
+
+{% endblock %}
