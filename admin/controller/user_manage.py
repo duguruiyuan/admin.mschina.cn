@@ -109,7 +109,7 @@ def insert_user():
     result_data = json.loads(response_data.content)
     #code =1 注册成功
     if result_data['code'] == 1:
-        return jsonify('{"code":"1","message":"success"}')
+        return jsonify({"code":1,"message":"success"})
     #code = 0 注册失败
     if response_data['code'] == 0:
         return jsonify(result_data)
