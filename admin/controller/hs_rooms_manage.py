@@ -47,6 +47,27 @@ def houses_manage():
     except Exception as e:
         return render_template("hs_rooms/houses_manage.html")
 
+@ad.route("/change_status_by_hs_id",methods=["POST"])
+def change_status_by_hs_id():
+    hs_id = request.json.get("hs_id")
+    if not hs_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    hs_status = request.json.get("hs_status")
+    if not hs_status:
+        return jsonify({"code": 0, "message": "参数错误"})
+    data = json.dumps({"hs_status": hs_status})
+    response = requests.put(Conf.API_ADDRESS + "/api/v1.0/modify_status_by_hs_id/" + str(hs_id),
+                        data=data,
+                        headers={"content-type": "application/json"})
+    response_data = json.loads(response.content)
+    # code = 0删除失败
+    if response_data["code"] == 0:
+        return jsonify(response_data)
+    # code = 1 删除成功
+    if response_data["code"] == 1:
+        return jsonify({"code": 1, "message": "停业操作成功"})
+
+
 @ad.route("/del_type_by_id",methods=["POST"])
 def del_type_by_id():
     ty_id = request.json.get("ty_id")
