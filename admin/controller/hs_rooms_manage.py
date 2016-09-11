@@ -129,3 +129,43 @@ def update_type_by_id():
     # code = 1 编辑成功
     if response_data["code"] == 1:
         return jsonify({"code": 1, "message": "success"})
+'''
+客房管理
+'''
+# 获取某房源下的客房列表
+@ad.route("/rooms_manage/<int:hs_id>")
+def rooms_manage(hs_id):
+    if not hs_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    page = request.args.get('page')
+    if page == None:
+        page = '1'
+    try:
+        response = requests.get(url=Conf.API_ADDRESS + "/api/v1.0/get_all_rooms_by_hs_id/" + str(hs_id)+"/"+str(page))
+        response_data = json.loads(response.content)
+        if response_data['code'] == 1:
+            page = response_data['page']
+            pages = response_data['pages']
+            total = response_data['total']
+            entities = response_data['message']
+
+            pagination = Pagination(page=page, total=total, pages=pages)
+            return render_template("hs_rooms/rooms_manage.html", pagination=pagination, entities=entities)
+
+    except Exception as e:
+        return render_template("hs_rooms/rooms_manage.html")
+
+@ad.route("/del_room_by_gr_id",methods=['POST'])
+def del_room_by_gr_id():
+    gr_id = request.json.get("gr_id")
+    if not gr_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    response = requests.delete(Conf.API_ADDRESS + "/api/v1.0/gr_delete/" + str(gr_id),headers={"content-type": "application/json"})
+    response_data = json.loads(response.content)
+    # code = 0删除失败
+    if response_data["code"] == 0:
+        return jsonify(response_data)
+    # code = 1 删除成功
+    if response_data["code"] == 1:
+        return jsonify({"code": 1, "message": "删除成功"})
+    return jsonify({"code": 0, "message": "删除失败"})

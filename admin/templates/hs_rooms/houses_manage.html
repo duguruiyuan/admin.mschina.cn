@@ -50,7 +50,7 @@
                         {% for item in entities %}
                             <tr >
                               <td>{{ item.ty_name }}</td>
-                              <td><a class="btn default btn-xs purple" onclick="" >{{ item.hs_name }}</a></td>
+                              <td><a class="btn default btn-xs purple" onclick="link2Rooms({{ item.hs_id }})" >{{ item.hs_name }}</a></td>
                               {% if item.hs_status==1 %}
                                  <td class="center"><span class="label label-sm label-info">正常营业</span></td>
                               {% elif item.user_status==0 %}
@@ -133,6 +133,9 @@
 {% endblock %}
 {% block jsblock %}
 <script>
+function link2Rooms(hs_id) {
+    location.href = "/rooms_manage/"+hs_id;
+}
 function showClosedModal(hs_id) {
     $("#hid-hs-id").val(hs_id);
     $("#Closed-modal").modal('show');
