@@ -47,6 +47,26 @@ def houses_manage():
     except Exception as e:
         return render_template("hs_rooms/houses_manage.html")
 
+@ad.route("/house_search_by_key/<string:key>")
+def house_search_by_key(key):
+    page = request.args.get('page')
+    if page == None:
+        page = '1'
+    try:
+        response = requests.get(url=Conf.API_ADDRESS + "/api/v1.0/get_all_houses/" + page)
+        response_data = json.loads(response.content)
+        if response_data['code'] == 1:
+            page = response_data['page']
+            pages = response_data['pages']
+            total = response_data['total']
+            entities = response_data['message']
+
+            pagination = Pagination(page=page, total=total, pages=pages)
+            return render_template("hs_rooms/houses_manage.html", pagination=pagination, entities=entities)
+
+    except Exception as e:
+        return render_template("hs_rooms/houses_manage.html")
+
 @ad.route("/change_status_by_hs_id",methods=["POST"])
 def change_status_by_hs_id():
     hs_id = request.json.get("hs_id")
@@ -186,3 +206,5 @@ def change_room_status_by_gr_id():
         return jsonify(response_data)
     if response_data["code"] == 1:
         return jsonify({"code": 1, "message": "操作成功"})
+
+

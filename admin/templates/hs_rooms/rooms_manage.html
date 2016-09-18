@@ -55,7 +55,8 @@
                                <td><a class="btn default btn-xs purple" onclick="" >{{ item.gr_name }}</a></td>
                                <td>{{ item.gr_price }}</td>
                                  <td class="center">
-                                {% if item.gr_status==1 %}  #admin:0表示审核中,1 正常(审核通过),2 房东停止发布
+{#                                 admin:0表示审核中,1 正常(审核通过),2 房东停止发布#}
+                                {% if item.gr_status==1 %}
                                    <span class="label label-sm label-info">审核通过</span>
                               {% elif item.gr_status==0 %}
                                    <span class="label label-sm label-info">审核中</span>
@@ -134,6 +135,26 @@ function showStatusModal(gr_id,gr_status) {
 function changeStatusByGrId() {
     var gr_id =  $("#hid-gr-id").val();
     var gr_status =  $("#status_select").find("option:selected").val();  // ok
+    if(gr_id>0 && gr_status){
+       $.ajax({
+                url: "/change_room_status_by_gr_id",
+                type: 'POST',
+                data: JSON.stringify({
+                    "gr_id":gr_id,
+                    "gr_status":gr_status
+                }),
+                contentType: "application/json",
+                success:function (data) {
+                    if(data.code == 0){
+                        alert(data.message);
+                        return false;
+                    }else if(data.code == 1){
+                        alert(data.message);
+                        location.reload();
+                    }
+                }
+            });
+    }
 
 
 }
