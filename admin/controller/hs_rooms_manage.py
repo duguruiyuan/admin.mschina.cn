@@ -53,19 +53,17 @@ def change_status_by_hs_id():
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
     hs_status = request.json.get("hs_status")
-    if not hs_status:
+    if int(hs_status)>1:
         return jsonify({"code": 0, "message": "参数错误"})
     data = json.dumps({"hs_status": hs_status})
     response = requests.put(Conf.API_ADDRESS + "/api/v1.0/modify_status_by_hs_id/" + str(hs_id),
                         data=data,
                         headers={"content-type": "application/json"})
     response_data = json.loads(response.content)
-    # code = 0删除失败
     if response_data["code"] == 0:
         return jsonify(response_data)
-    # code = 1 删除成功
     if response_data["code"] == 1:
-        return jsonify({"code": 1, "message": "停业操作成功"})
+        return jsonify({"code": 1, "message": "操作成功"})
 
 
 @ad.route("/del_type_by_id",methods=["POST"])
@@ -169,3 +167,22 @@ def del_room_by_gr_id():
     if response_data["code"] == 1:
         return jsonify({"code": 1, "message": "删除成功"})
     return jsonify({"code": 0, "message": "删除失败"})
+
+# 客房状态修改
+@ad.route("/change_room_status_by_gr_id",methods=["POST"])
+def change_room_status_by_gr_id():
+    gr_id = request.json.get("gr_id")
+    if not gr_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    gr_status = request.json.get("gr_status")
+    if int(gr_status)>2:
+        return jsonify({"code": 0, "message": "参数错误"})
+    data = json.dumps({"gr_status": gr_status})
+    response = requests.put(Conf.API_ADDRESS + "/api/v1.0/change_status_by_gr_id/" + str(gr_id),
+                        data=data,
+                        headers={"content-type": "application/json"})
+    response_data = json.loads(response.content)
+    if response_data["code"] == 0:
+        return jsonify(response_data)
+    if response_data["code"] == 1:
+        return jsonify({"code": 1, "message": "操作成功"})

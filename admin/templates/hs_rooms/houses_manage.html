@@ -53,7 +53,7 @@
                               <td><a class="btn default btn-xs purple" onclick="link2Rooms({{ item.hs_id }})" >{{ item.hs_name }}</a></td>
                               {% if item.hs_status==1 %}
                                  <td class="center"><span class="label label-sm label-info">正常营业</span></td>
-                              {% elif item.user_status==0 %}
+                              {% elif item.hs_status==0 %}
                                  <td class="center"><span class="label label-sm label-danger">已停业</span></td>
                               {% endif %}
                               <td>{{ item.ho_name}}</td>
@@ -144,7 +144,7 @@ function changeStatusById(status) {
     var hs_id =  $("#hid-hs-id").val();
     if(hs_id>0){
         $.ajax({
-                url: "/closed_by_hs_id",
+                url: "/change_status_by_hs_id",
                 type: 'POST',
                 data: JSON.stringify({
                     "hs_id":hs_id,

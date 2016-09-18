@@ -84,20 +84,21 @@
                </div>
             </div>
          </div>
-<div id="status-modal" class="modal fade in" tabindex="-1" data-backdrop="static" data-keyboard="false">
+<div id="status-modal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h4 class="modal-title">修改客房状态</h4>
     </div>
     <div class="modal-body">
         <div class="form-group" id="toastTypeGroup">
-            <label>Toast Type</label>
+{#            <label>Toast Type</label>#}
             <div class="radio-list">
                 <label>
-                    通过审核<input type="radio" name="room_status" value="1" checked />
-                </label>
-                <label>
-                    停止发布<input type="radio" name="room_status" value="2" />
+                    状态列:<select id="status_select">
+                        <option value="1">审核通过(正常)</option>
+                          <option value="0">审核中</option>
+                          <option value="2">停止发布</option>
+                        </select>
                 </label>
             </div>
         </div>
@@ -115,14 +116,26 @@
     </div>
 </div>
 <input type="hidden" id="hid-gr-id" value="">
+<input type="hidden" id="hid-gr-status" value="">
 {% endblock %}
 {% block jsblock %}
 <script>
 function showStatusModal(gr_id,gr_status) {
+    $("#hid-gr-id").val(gr_id);
+    $("#status_select").children("option").each(function(){
+        var temp_value = $(this).val();
+        if(parseInt(temp_value) == gr_status){
+            $(this).attr("selected","selected");
+        }
+    });
+
     $("#status-modal").modal('show');
 }
 function changeStatusByGrId() {
-    
+    var gr_id =  $("#hid-gr-id").val();
+    var gr_status =  $("#status_select").find("option:selected").val();  // ok
+
+
 }
 function back2Page() {
     location.href=document.referrer;
